@@ -1,19 +1,11 @@
 <?php 
 include 'config.php';
-//获取POST数据
- $data=$_POST;
-// echo "<pre>";
-// var_dump($data);
-// echo "</pre>";
-
-$id=(int)$data['id'];
-$name=$data['name'];
-$sex=$data['sex'];
-$score=(int)$data['score'];
-$class=(int)$data['class'];
-$birthday=strtotime($data['birday']);
-
-
+$id=(int)$_POST['id'];
+$name=$_POST['name'];
+$sex=$_POST['sex'];
+$score=(int)$_POST['score'];
+$class=(int)$_POST['class'];
+$birthday=strtotime($_POST['birday']);
 
 //准备sql语句
 $sql="INSERT INTO student(id,name,sex,score,class,birthday) VALUES ($id,'$name','$sex',$score,$class,'$birthday')";
@@ -22,10 +14,12 @@ $sql="INSERT INTO student(id,name,sex,score,class,birthday) VALUES ($id,'$name',
 $smt=$pdo->prepare($sql);
 
 if($smt->execute()){
-	echo "<script>location='print.php'</script>";
-}
-else {
-	echo '111111<br>';
-	echo $birthday;
+	echo "<script>location='print.php?sortid=0&whereid=-1&wherename='</script>";
+} else {
+    echo '<script language="javascript">';
+    echo 'alert("插入失败")';  //not showing an alert box.
+    echo '</script>';
+    echo "<script>location='print.php?sortid=0&whereid=-1&wherename='</script>";
+    exit;
 }
  ?>

@@ -1,32 +1,29 @@
-<?php 
-include 'config.php';
-$sort=$_GET['sortid'];
-$whereid=(int)$_GET['whereid'];
-$wherename=$_GET['wherename'];
+<?php
+    include 'config.php';
+    $sort=(int)$_GET['sortid'];
+    $whereid=(int)$_GET['whereid'];
+    $wherename=$_GET['wherename'];
+    if ($whereid==0) {
+        $sql="select * from student where name='{$wherename}'";
+    } else if ($whereid==-1) {
+        $sql='select * from student';
+    }else{
+//        $sql="select * from student where id=?";
+        $sql="select * from student where id='{$whereid}'";
+    }
+    switch ($sort) {
+        case 0:$sql=$sql.' order by id';break;
+        case 1:$sql=$sql.' order by id desc';break;
+        case 2:$sql=$sql.' order by score';break;
+        case 3:$sql=$sql.' order by score desc';break;
+    }
 
-if ($whereid==0) {
-	$sql="select * from student where name='{$wherename}'";
-}else{
-	$sql="select * from student where id=?";
-}
-switch ($sort) {
-	case '0':$sqlby=' order by id';break;
-	case '1':$sqlby=' order by id desc';break;
-	case '2':$sqlby=' order by score';break;
-	case '3':$sqlby=' order by score desc';break;	
-}
-
-$sql=$sql.$sqlby;
-
-if ($whereid==-1) {
-	$sql='select * from student';
-}
-				$smt=$pdo->prepare($sql);
-				if ($whereid!=0) {
-					$smt->bindValue(1,$whereid,PDO::PARAM_INT);
-				}
-				$smt->execute();
-				$result=$smt->fetchAll();
+    $smt=$pdo->prepare($sql);
+//    if ($whereid>=0) {
+//        $smt->bindValue(1,$whereid,PDO::PARAM_INT);
+//    }
+    $smt->execute();
+    $result=$smt->fetchAll();
  ?>
 
 <!DOCTYPE html>
@@ -52,7 +49,7 @@ if ($whereid==-1) {
 			<tr>
 				<th style="text-align: center;">ID</th>
 				<th style="text-align: center;">用户名</th>
-				<th style="text-align: center;">性别</th>
+				<th style="text-align: center;">性别</th>.
 				<th style="text-align: center;">班级ID</th>
 				<th style="text-align: center;">分数</th>
 				<th style="text-align: center;">出生日期</th>
@@ -69,9 +66,8 @@ if ($whereid==-1) {
 					echo "<td class='warning' align='center'><b>{$value['class']}</b></td>";
 					echo "<td class='warning' align='center'><b>{$value['score']}</b></td>";
 					echo "<td class='warning' align='center'><b>".date('Y-m-d',$birthday)."</b></td>";
-					echo "<td><a href='delete.php?id={$value['id']}'
-					onclick='return conFirm()' class='btn btn-danger btn-block' >删除</td>";
-					echo "<td><a href='update.php?id={$value['id']}' class='btn btn-primary btn-block' >修改</td>";
+					echo "<td><a href='delete.php?id={$value['id']}'onclick='return conFirm()' class='btn btn-danger btn-block' >删除</td>";
+					echo "<td><a href='update_view.php?id={$value['id']}' class='btn btn-primary btn-block' >修改</td>";
 					echo "</tr>";
 				}
 			 ?>
